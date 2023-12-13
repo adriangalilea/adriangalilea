@@ -26,19 +26,20 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={tag}>
-    <p>Posts tagged with {tag}</p>
-    <ul class="list-disc pl-5 space-y-2">
-        {
-            posts.map((post) => (
-                <li key={post.slug} class="mb-2">
-                    <a
-                        href={`/posts/${post.slug}/`}
-                        class="text-blue-600 hover:text-blue-800"
-                    >
-                        {post.data.title}
-                    </a>
-                </li>
-            ))
-        }
-    </ul>
+    <div class="prose dark:prose-invert">
+        <p>Posts tagged with {tag}</p>
+        <ul class="list-disc pl-5 space-y-2">
+            {
+                posts.map((post) => (
+                    <li key={post.slug} class="mb-2">
+                        <a
+                            href={`/posts/${post.slug}/`}
+                        >
+                            {post.data.title}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
 </BaseLayout>

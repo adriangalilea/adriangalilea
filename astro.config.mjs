@@ -5,5 +5,9 @@ import preact from "@astrojs/preact";
 // https://astro.build/config
 export default defineConfig({
   site: "https://adriangalilea.vercel.app/",
-  integrations: [preact()]
+  integrations: [preact()],
+  prefetch: true,
+  image: {
+    domains: ["astro.build"],
+  }
 });

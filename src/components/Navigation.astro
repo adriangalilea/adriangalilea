@@ -1,6 +1,35 @@
-<div class="nav-links">
-  <a href="/" data-astro-prefetch>Home</a>
-  <a href="/about" data-astro-prefetch>About</a>
-  <a href="/blog" data-astro-prefetch>Blog</a>
-  <a href="/tags/" data-astro-prefetch>Tags</a>
-</div>
+---
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="nav-links flex flex-col md:flex-row md:items-center">
+  <a
+    href="/"
+    class={`nav-link ${currentPath === "/" ? "active" : ""}`}
+    data-astro-prefetch>Home</a
+  >
+  <a
+    href="/about"
+    class={`nav-link ${currentPath === "/about" ? "active" : ""}`}
+    data-astro-prefetch>About</a
+  >
+  <a
+    href="/blog"
+    class={`nav-link ${currentPath === "/blog" ? "active" : ""}`}
+    data-astro-prefetch>Blog</a
+  >
+  <a
+    href="/tags/"
+    class={`nav-link ${currentPath === "/tags/" ? "active" : ""}`}
+    data-astro-prefetch>Tags</a
+  >
+</nav>
+
+<style>
+  .nav-link {
+    @apply block text-zinc-400 hover:text-zinc-100 transition duration-200 py-4 px-8 hover:bg-zinc-600;
+  }
+  .nav-link.active {
+    @apply bg-zinc-400 text-zinc-900 hover:bg-zinc-400 hover:text-zinc-900;
+  }
+</style>

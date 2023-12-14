@@ -11,15 +11,13 @@ const identity = {
 	occupation: "byte alchemist",
 	hobbies: ["Creating", "AI", "Programming"],
 };
-
-const skills = ["Creativity", "Relentlessness"];
 ---
 
 <BaseLayout pageTitle={pageTitle}>
 	<div class="prose dark:prose-invert">
 		<Greeting client:load/>
 	</div>
-	<div class="prose dark:prose-invert">
+	<!-- <div class="prose dark:prose-invert">
 		<ul class="space-y-2">
 			<li>
 				My name is {identity.firstName}.
@@ -38,13 +36,5 @@ const skills = ["Creativity", "Relentlessness"];
 				))
 			}
 		</ul>
-		<p class="mt-4">My skills are:</p>
-		<ul class="space-y-2">
-			{
-				skills.map((skill) => (
-					<li>{skill}</li>
-				))
-			}
-		</ul>
-	</div>
+	</div> -->
 </BaseLayout>

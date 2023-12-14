@@ -1,0 +1,43 @@
+---
+const fullPath = Astro.url.pathname;
+const subFolders = fullPath
+    .split("/")
+    .filter((part, index) => part && index !== 0);
+
+let cumulativePath = "";
+const links = subFolders.map((folder) => {
+    cumulativePath += "/" + folder;
+    return { name: folder, path: cumulativePath };
+});
+---
+
+<div class="flex flex-wrap -mx-2">
+    {
+        links.map((link, index) => (
+            <div key={index} class="mb-4 w-auto">
+                <a
+                    href={link.path}
+                    class="inline-block 
+                           transform -skew-x-12 
+                           py-2 
+                           rounded-sm 
+                           shadow-lg 
+                           transition duration-100 
+                           hover:text-indigo-500 hover:ring-2 hover:ring-indigo-500 hover:ring-offset-2 
+                           focus:text-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 
+                           dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:focus:bg-zinc-700 
+                           dark:hover:text-white dark:focus:text-white"
+                >
+                    <div class="transform skew-x-12 
+                                text-center 
+                                cursor-pointer 
+                                prose 
+                                dark:prose-invert"
+                    >
+                        /{link.name}
+                    </div>
+                </a>
+            </div>
+        ))
+    }
+</div>

@@ -1,11 +1,23 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-const pageTitle = "Home Page";
 import Greeting from '../components/Greeting.jsx';
+import Folder from '../components/Folder.astro';
+
+const pageTitle = "Home Page";
+const pathList = ["about", "blog", "tags"];
 ---
 
 <BaseLayout pageTitle={pageTitle}>
 	<div class="prose dark:prose-invert">
 		<Greeting client:load/>
+	</div>
+	<div class="flex flex-wrap -mx-2">
+		{
+			pathList.map((path, index) => (
+				<div key={index} class="px-2 mb-4 w-auto">
+					<Folder folder={path} hasPadding={true}/>
+				</div>
+			))
+		}
 	</div>
 </BaseLayout>

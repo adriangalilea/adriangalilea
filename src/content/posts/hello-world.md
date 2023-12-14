@@ -7,6 +7,7 @@ image:
     url: 'https://docs.astro.build/assets/arc.webp'
     alt: 'Thumbnail of Astro arcs.'
 tags: ["astro", "blogging", "learning in public"]
+paths: ["/blogging"]
 ---
 
 ```python

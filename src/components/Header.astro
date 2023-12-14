@@ -1,15 +1,37 @@
 ---
-import Hamburger from "./Hamburger.astro";
-import Navigation from "./Navigation.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import Folder from "./Folder.astro";
 import ThemeIcon from "./ThemeIcon.astro";
+import Home from "./Home.astro";
+import { getCollection } from "astro:content";
+
+const blogEntries = await getCollection("posts");
+const path = Astro.url.pathname;
+const allPaths = blogEntries.map(entry => entry.data.paths).flat();
+
+// Inline logic to extract subdirectories
+const subDirs = new Set();
+allPaths.forEach(p => {
+    if (p.startsWith(path)) {
+        const relativePath = p.substring(path.length);
+        const parts = relativePath.split('/').filter(Boolean);
+        if (parts.length > 0) subDirs.add(parts[0]);
+    }
+});
+const subDirectories = Array.from(subDirs);
 ---
 
-<header class="flex justify-between items-center bg-zinc-600 dark:bg-zinc-950">
+<header class="flex justify-between items-center bg-zinc-600 dark:bg-zinc-950 px-4 py-2">
   <nav class="flex items-center">
-    <Hamburger />
-    <div class="hidden md:flex md:items-center md:flex-grow">
-      <Navigation />
+    <div class="flex items-center mr-16">
+      <Breadcrumbs />
+    </div>
+    <div class="flex items-center space-x-8">
+      {subDirectories.map(subDir => (
+        <Folder key={subDir} folder={subDir} />
+      ))}
     </div>
   </nav>
   <ThemeIcon />
 </header>
+

@@ -1,5 +1,5 @@
 ---
-const fullPath = Astro.url.pathname;
+const fullPath = Astro.props.path || Astro.url.pathname;
 const subFolders = fullPath
     .split("/")
     .filter((part, index) => part && index !== 0);
@@ -11,10 +11,18 @@ const links = subFolders.map((folder) => {
 });
 ---
 
-<div class="flex flex-wrap -mx-2">
+<div class="flex flex-wrap items-center">
+    <div class="w-auto">
+        <a
+            href="/"
+            class="prose dark:prose-invert inline-flex items-center justify-center py-2 px-4 rounded-sm shadow-lg text-white transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-zinc-700 hover:bg-indigo-500 focus:bg-zinc-700 dark:hover:bg-indigo-900 dark:focus:ring-offset-indigo-900"
+        >
+            ~
+        </a>
+    </div>
     {
         links.map((link, index) => (
-            <div key={index} class="mb-4 w-auto">
+            <div key={index} class={`w-auto ${index === 0 ? '-ml-3' : ''}`}>
                 <a
                     href={link.path}
                     class="inline-block 
@@ -23,12 +31,12 @@ const links = subFolders.map((folder) => {
                            rounded-sm 
                            shadow-lg 
                            transition duration-100 
-                           hover:text-indigo-500 hover:ring-2 hover:ring-indigo-500 hover:ring-offset-2 
-                           focus:text-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 
-                           dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:focus:bg-zinc-700 
-                           dark:hover:text-white dark:focus:text-white"
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500 
+                           bg-zinc-700 hover:bg-indigo-500 focus:bg-zinc-700 
+                           dark:hover:bg-indigo-900 dark:focus:ring-offset-indigo-900"
                 >
-                    <div class="transform skew-x-12 
+                    <div
+                        class="transform skew-x-12 
                                 text-center 
                                 cursor-pointer 
                                 prose 

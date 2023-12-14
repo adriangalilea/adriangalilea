@@ -1,0 +1,108 @@
+---
+import { getCollection } from "astro:content";
+import MarkdownPostLayout from "../layouts/MarkdownPostLayout.astro";
+import Folder from "../components/Folder.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+    const blogEntries = await getCollection("posts");
+    let allPaths = new Set();
+
+    blogEntries.forEach((entry) => {
+        if (entry.data.paths && Array.isArray(entry.data.paths)) {
+            entry.data.paths.forEach((path) => {
+                const normalizedPath = path.startsWith("/") ? path : "/" + path;
+                allPaths.add(normalizedPath);
+
+                const postPath = `${normalizedPath}/${entry.slug}`;
+                allPaths.add(postPath);
+
+                // Include all sub-paths
+                let subPath = "";
+                normalizedPath.split("/").forEach((segment) => {
+                    if (segment) {
+                        subPath += "/" + segment;
+                        allPaths.add(subPath);
+                    }
+                });
+            });
+        }
+    });
+
+    return Array.from(allPaths).map((path) => ({
+        params: { slug: path.substring(1) }, // Remove leading '/'
+        props: {},
+    }));
+}
+
+const blogEntries = await getCollection("posts");
+const path = Astro.url.pathname;
+
+const pathSegments = path.split('/').filter(Boolean);
+const lastSegmentOfPath = pathSegments[pathSegments.length - 1];
+
+const isDirectoryPage = blogEntries.some(entry =>
+    entry.data.paths && entry.data.paths.some(p => 
+        p.startsWith(path + '/') || p === path
+    )
+);
+
+function extractSubdirectory(basePath, fullPath) {
+    const relativePath = fullPath.startsWith(basePath) ? fullPath.substring(basePath.length) : '';
+    const parts = relativePath.split('/').filter(Boolean);
+    return parts.length > 0 ? parts[0] : null;
+}
+
+let postsInDirectory = [];
+let currentPost = null;
+let currentPostContent = null;
+let postsWithLinks = [];  // Declare postsWithLinks here
+let possibleSubDirectories = new Set();
+
+if (!isDirectoryPage) {
+    currentPost = blogEntries.find(entry =>
+        entry.data.paths && entry.data.paths.some(p =>
+            `${p}/${entry.slug}` === path
+        )
+    );
+
+    if (currentPost) {
+        const rendered = await currentPost.render();
+        currentPostContent = rendered.Content;
+    }
+} else {
+    postsInDirectory = blogEntries.filter(entry =>
+        entry.data.paths && entry.data.paths.some(p =>
+            p === path || (p.startsWith(path) && p.charAt(path.length) === '/')
+        )
+    );
+
+    // Populate postsWithLinks within the else block
+    postsWithLinks = postsInDirectory.map(post => {
+        const postPath = post.data.paths.find(p => p.startsWith(path));
+        const postLink = postPath ? `${postPath}/${post.slug}` : `${path}/${post.slug}`;
+        return { ...post, link: postLink };
+    });
+}
+---
+{
+    isDirectoryPage ? (
+        <BaseLayout pageTitle={path}>
+            <div class="prose dark:prose-invert">
+                <ul class="list-disc pl-5 space-y-2">
+                    {postsWithLinks.map(post => (
+                        <li key={post.slug}>
+                            <a href={post.link} data-astro-prefetch>{post.slug}</a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </BaseLayout>
+    ) : (
+        currentPostContent && (
+            <MarkdownPostLayout frontmatter={currentPost.data}>
+                <currentPostContent />
+            </MarkdownPostLayout>
+        )
+    )
+}

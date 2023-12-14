@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import MarkdownPostLayout from "../layouts/MarkdownPostLayout.astro";
-import Folder from "../components/Folder.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -37,9 +36,8 @@ export async function getStaticPaths() {
 
 const blogEntries = await getCollection("posts");
 const path = Astro.url.pathname;
-
-const pathSegments = path.split('/').filter(Boolean);
-const lastSegmentOfPath = pathSegments[pathSegments.length - 1];
+console.log(path);
+console.log(blogEntries);
 
 const isDirectoryPage = blogEntries.some(entry =>
     entry.data.paths && entry.data.paths.some(p => 
@@ -47,17 +45,10 @@ const isDirectoryPage = blogEntries.some(entry =>
     )
 );
 
-function extractSubdirectory(basePath, fullPath) {
-    const relativePath = fullPath.startsWith(basePath) ? fullPath.substring(basePath.length) : '';
-    const parts = relativePath.split('/').filter(Boolean);
-    return parts.length > 0 ? parts[0] : null;
-}
-
 let postsInDirectory = [];
 let currentPost = null;
 let currentPostContent = null;
-let postsWithLinks = [];  // Declare postsWithLinks here
-let possibleSubDirectories = new Set();
+let postsWithLinks = [];
 
 if (!isDirectoryPage) {
     currentPost = blogEntries.find(entry =>
@@ -77,7 +68,6 @@ if (!isDirectoryPage) {
         )
     );
 
-    // Populate postsWithLinks within the else block
     postsWithLinks = postsInDirectory.map(post => {
         const postPath = post.data.paths.find(p => p.startsWith(path));
         const postLink = postPath ? `${postPath}/${post.slug}` : `${path}/${post.slug}`;

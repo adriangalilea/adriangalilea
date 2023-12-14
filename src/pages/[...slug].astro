@@ -90,6 +90,9 @@ if (!isDirectoryPage) {
         </BaseLayout>
     ) : (
         currentPostContent && (
+            <div>
+                <p>Post</p>
+            </div>
             <MarkdownPostLayout frontmatter={currentPost.data}>
                 <currentPostContent />
             </MarkdownPostLayout>

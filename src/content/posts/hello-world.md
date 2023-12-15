@@ -1,7 +1,7 @@
 ---
 title: 'Hello world'
 pubDate: 2023-12-13
-description: 'Init post'
+description: 'Initial post'
 author: 'Adrian Galilea'
 image:
     url: 'https://docs.astro.build/assets/arc.webp'

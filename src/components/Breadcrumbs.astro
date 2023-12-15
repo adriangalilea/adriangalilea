@@ -25,8 +25,7 @@ const links = subFolders.map((folder) => {
             <div key={index} class={`w-auto ${index === 0 ? '-ml-3' : ''}`}>
                 <a
                     href={link.path}
-                    class="inline-block 
-                           transform -skew-x-12 
+                    class="inline-block
                            py-2 
                            rounded-sm 
                            shadow-lg 
@@ -36,11 +35,10 @@ const links = subFolders.map((folder) => {
                            dark:hover:bg-indigo-900 dark:focus:ring-offset-indigo-900"
                 >
                     <div
-                        class="transform skew-x-12 
-                                text-center 
-                                cursor-pointer 
-                                prose 
-                                dark:prose-invert"
+                        class="text-center 
+                            cursor-pointer 
+                            prose 
+                            dark:prose-invert"
                     >
                         /{link.name}
                     </div>

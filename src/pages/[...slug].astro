@@ -39,7 +39,9 @@ const path = Astro.url.pathname;
 console.log(path);
 console.log(blogEntries);
 
-const isDirectoryPage = blogEntries.some(entry =>
+const isRootPath = path === '/';
+
+const isDirectoryPage = isRootPath || blogEntries.some(entry =>
     entry.data.paths && entry.data.paths.some(p => 
         p.startsWith(path + '/') || p === path
     )
@@ -62,18 +64,23 @@ if (!isDirectoryPage) {
         currentPostContent = rendered.Content;
     }
 } else {
-    postsInDirectory = blogEntries.filter(entry =>
-        entry.data.paths && entry.data.paths.some(p =>
-            p === path || (p.startsWith(path) && p.charAt(path.length) === '/')
-        )
-    );
+    if (isRootPath) {
+        postsInDirectory = blogEntries;
+    } else {
+        postsInDirectory = blogEntries.filter(entry =>
+            entry.data.paths && entry.data.paths.some(p =>
+                p === path || (p.startsWith(path) && p.charAt(path.length) === '/')
+            )
+        );
+    }
 
     postsWithLinks = postsInDirectory.map(post => {
-        const postPath = post.data.paths.find(p => p.startsWith(path));
-        const postLink = postPath ? `${postPath}/${post.slug}` : `${path}/${post.slug}`;
+        const postPath = post.data.paths.find(p => p.startsWith(path)) || '/';
+        const postLink = `${postPath}/${post.slug}`;
         return { ...post, link: postLink };
     });
 }
+
 ---
 {
     isDirectoryPage ? (
